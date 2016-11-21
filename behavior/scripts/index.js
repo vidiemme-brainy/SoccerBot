@@ -55,10 +55,11 @@ const answerWhoWon = client.createStep({
   },
 
   prompt() {
-    client.addResponse('whowon', {
-team:firstOfEntityRole(client.getMessagePart(), 'team')
+    client.addResponse('app:response:name:answer/whowon', {
+team:'milan#team'//firstOfEntityRole(client.getMessagePart(), 'team')
 	});
     client.done()
+
   }
 })
 

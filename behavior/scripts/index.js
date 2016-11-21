@@ -33,6 +33,36 @@ exports.handle = (client) => {
     }
   })
 
+
+
+
+
+
+const firstOfEntityRole = function(message, entity, role) {
+  role = role || 'generic';
+
+  const slots = message.slots
+  const entityValues = message.slots[entity]
+  const valsForRole = entityValues ? entityValues.values_by_role[role] : null
+
+  return valsForRole ? valsForRole[0] : null
+}
+
+
+const answerWhoWon = client.createStep({
+  satisfied() {
+    return false
+  },
+
+  prompt() {
+    client.addResponse('whowon', {
+team:firstOfEntityRole(client.getMessagePart(), 'team')
+	});
+    client.done()
+  }
+})
+
+
   client.runFlow({
     classifications: {
       // map inbound message classifications to names of streams
@@ -41,9 +71,13 @@ exports.handle = (client) => {
       // configure responses to be automatically sent as predicted by the machine learning model
     },
     streams: {
-      main: 'onboarding',
-      onboarding: [sayHello],
+      main: 'whowon',
+        whowon: [answerWhoWon],
+      hi: [sayHello],
       end: [untrained],
     },
   })
+
+
 }
+
